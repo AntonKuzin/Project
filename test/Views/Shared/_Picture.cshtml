@@ -1,0 +1,20 @@
+﻿@model test.ViewModels.PictureViewModel
+
+               
+<div class =" title">
+    @Html.DisplayFor(modelItem => Model.Name)
+</div>
+<div class="author">
+    <span>Author:</span>
+    @Html.ActionLink(Model.UserEmail,"UserPictures","Picture", new {id = Model.UserId}, "")
+</div>
+<a href="/Picture/ShowPhoto?id=@Model.Id"><img src =@("/Pictures/Small/" + Model.Url) width="250px" /></a>
+@if(User.Identity.IsAuthenticated)
+{
+    <div class ="buttons">
+        <div class="rating_buttons" id="rating_buttons_@Model.Id" style="width: auto;float: none;">
+           @Html.Partial("_Buttons", Model)
+        </div>     
+               
+    </div>
+}

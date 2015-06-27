@@ -1,0 +1,19 @@
+﻿@model test.ViewModels.PictureViewModel
+
+@if (Model.Like == null)
+            {
+                @Ajax.ActionLink("Like", "Like", "Picture", new {id = Model.Id},new AjaxOptions{UpdateTargetId="rating_buttons_" + Model.Id}  ,new {@class = "like button8"})
+                @Ajax.ActionLink("Dislike", "Dislike", "Picture", new {id = Model.Id},new AjaxOptions{UpdateTargetId="rating_buttons_" + Model.Id }  ,new {@class = "dislike button8"})
+            }
+            else if (Model.Like.Like == true)
+            {
+                @Ajax.ActionLink("Like", "Like", "Picture", new {id = Model.Id},new AjaxOptions{UpdateTargetId="rating_buttons_" + Model.Id}  ,new {@class = "like button8 liked"})
+                @Ajax.ActionLink("Dislike", "Dislike", "Picture", new {id = Model.Id},new AjaxOptions{UpdateTargetId="rating_buttons_" + Model.Id}  ,new {@class = "dislike button8"})
+            }
+            else
+            {
+                @Ajax.ActionLink("Like", "Like", "Picture", new {id = Model.Id},new AjaxOptions{UpdateTargetId="rating_buttons_" + Model.Id}  ,new {@class = "like button8"})
+                @Ajax.ActionLink("Dislike", "Dislike", "Picture", new {id = Model.Id},new AjaxOptions{UpdateTargetId="rating_buttons_" + Model.Id}  ,new {@class = "dislike button8 disliked"})
+            }
+
+

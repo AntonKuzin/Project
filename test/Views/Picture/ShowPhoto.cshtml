@@ -1,0 +1,33 @@
+﻿@model test.ViewModels.PictureViewModel
+
+@{
+    ViewBag.Title = "ShowPhoto";
+}
+<div class="show_photo">
+    <div class="title">
+        <h2>@Html.DisplayFor(modelItem => Model.Name)</h2>
+    </div>
+
+
+    <img style="display: block; margin: 0 auto; max-width: 900px" src =@("/Pictures/Small/" + Model.Url)  />
+    <div class ="buttons">
+        @if (User.Identity.IsAuthenticated)
+        {
+       
+            <div class="rating_buttons" id="rating_buttons_@Model.Id">
+                @Html.Partial("_Buttons", Model)
+            </div>
+        }
+        <div class="navigation_buttons">
+            <a href="/" class="button18">На главную</a>
+            @if (User.Identity.Name == Model.UserEmail)
+            {
+                @Html.ActionLink("Редактировать", "Edit", "Picture", new {id = Model.Id}, new {@class = "button18"})
+                @Html.ActionLink("Удалить", "Delete", "Picture", new {id = Model.Id}, new {@class = "button18"})
+            }
+        </div>      
+        
+        
+    </div>
+
+</div>

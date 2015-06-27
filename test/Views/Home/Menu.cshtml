@@ -1,0 +1,19 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+    <ul>
+        <li>@HttpContext.Current.User.Identity.Name</li>
+        <li>@Html.ActionLink("Выход", "LogOff", "Account")</li>
+    </ul>
+    
+    if (User.IsInRole("admin"))
+    {
+        <h3>У Вас есть права администратора.</h3>
+    }
+}
+else
+{
+    <ul>
+        <li>@Html.ActionLink("Вход", "Login", "Account")</li>
+        <li>@Html.ActionLink("Регистрация", "Register", "Account")</li>
+    </ul>
+}

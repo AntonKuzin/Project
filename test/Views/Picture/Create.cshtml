@@ -1,0 +1,27 @@
+﻿@model ORM.Pictures
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+
+@using (Html.BeginForm("Create", "Picture", FormMethod.Post, new {enctype="multipart/form-data"}))  {    
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)   
+    <input type="file" name="fileUpload" accept="image/*" /><br />      
+    <input type="text " name="PictureName" placeholder="Name"/><br /> 
+    <input type="text " name="PictureDescription" placeholder="Description"/><br /> 
+    <input type="submit" name="Submit" id="SubmitSingle" value="Upload" /> 
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

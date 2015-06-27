@@ -1,0 +1,17 @@
+﻿@using System.Web.Razor.Parser
+@model IEnumerable<test.ViewModels.PictureViewModel>
+@{
+    ViewBag.Title = "UserPictures";
+}
+
+<h2>UserPictures</h2>
+<div class ="pictures">
+                @foreach (var item in Model) {
+                    <div class="picture">
+                        
+                        @Html.Partial("_Picture", item)
+                        
+                    </div>
+                }
+            </div>
+

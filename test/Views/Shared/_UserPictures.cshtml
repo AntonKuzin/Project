@@ -1,0 +1,10 @@
+﻿@model IEnumerable<test.ViewModels.PictureViewModel>
+
+@foreach (var item in Model) {
+                    <div class="picture">
+                        
+                        @Html.Partial("_Picture", item)
+                        
+                    </div>
+                }
+
