@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IRepositories\IPictureRepository.cs" />
+    <Compile Include="IRepositories\IUnitOfWork.cs" />
     <Compile Include="IRepositories\IUserRepository.cs" />
     <Compile Include="Models\DalLike.cs" />
     <Compile Include="Models\DalPicture.cs" />

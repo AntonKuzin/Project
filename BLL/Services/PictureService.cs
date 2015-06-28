@@ -11,16 +11,19 @@ using BLL.Interface.Services;
 using BLL.Interface.Models;
 using BLL.Mappers;
 using DAL.Interface.IRepositories;
+using ImageResizer;
 
 namespace BLL.Services
 {
     public class PictureService : IPictureService
     {
+        private readonly IUnitOfWork _uow;
         private readonly IPictureRepository _pictureRepository;
 
-        public PictureService(IPictureRepository repository)
+        public PictureService(IPictureRepository repository, IUnitOfWork uow)
         {
             _pictureRepository = repository;
+            _uow = uow;
         }
 
         public IEnumerable<BllPicture> GetAllPictures()
@@ -33,35 +36,74 @@ namespace BLL.Services
             return _pictureRepository.GetUserPictures(id).Select(picture => picture.ToBllPicture());
         }
 
-        public bool CreatePicture(IEnumerable<HttpPostedFileBase> fileUpload, string name, string description, string userEmail)
+        public void CreatePicture(HttpPostedFileBase fileUpload, string name, string description, string userEmail)
         {
-            return _pictureRepository.CreatePicture(fileUpload, name, description, userEmail);
+            // получаем расширение
+            var ext = fileUpload.FileName.Substring(fileUpload.FileName.LastIndexOf(".") + 1);
+
+            Random rnd = new Random();
+            int temp = rnd.Next(10000);
+
+            string[] paths =
+            {
+                HttpContext.Current.Server.MapPath("~/Pictures/Small/"),
+                HttpContext.Current.Server.MapPath("~/Pictures/Originals/")
+            };
+
+            // создаем инструкции для различных версий
+            var versions = new Dictionary<string, string>();
+            versions.Add("small", "maxwidth=250&format=" + ext);
+            versions.Add("original", "format=" + ext);
+
+            int i = 0;
+            foreach (var suffix in versions.Keys)
+            {
+                fileUpload.InputStream.Seek(0, SeekOrigin.Begin);
+
+                ImageBuilder.Current.Build(
+                    new ImageJob(
+                        fileUpload.InputStream,
+                        paths[i] + fileUpload.FileName.Remove(fileUpload.FileName.LastIndexOf(".")) + temp,
+                        new Instructions(versions[suffix]),
+                        false,
+                        true));
+                i++;
+            }
+            string url = fileUpload.FileName.Remove(fileUpload.FileName.LastIndexOf(".")) + temp +"." + ext;
+            _pictureRepository.CreatePicture(url, name, description, userEmail);
+            //_uow.Commit();
         }
 
-        public bool UpdatePicture(BllPicture picture)
+        public void UpdatePicture(BllPicture picture)
         {
             if (picture == null)
-                return false;
+                return;
             if (GetCurrentUserId() == picture.UserId)
             {
-                return _pictureRepository.UpdatePicture(picture.ToDalPicture());
+                _pictureRepository.UpdatePicture(picture.ToDalPicture());
+                //_uow.Commit();
             }
-            return false;
         }
 
-        public bool RemovePicture(int id)
+        public void RemovePicture(int id)
         {
-            return _pictureRepository.RemovePicture(id);
+            if (id != 0)
+            {
+                _pictureRepository.RemovePicture(id);
+                //_uow.Commit();
+            }
         }
 
-        public bool CreateLike(int id, int currentUserId)
+        public void CreateLike(int id, int currentUserId)
         {
-            return _pictureRepository.CreateLike(id, currentUserId);
+            _pictureRepository.CreateLike(id, currentUserId);
+            //_uow.Commit();
         }
 
-        public bool CreateDislike(int id, int currentUserId)
+        public void CreateDislike(int id, int currentUserId)
         {
-            return _pictureRepository.CreateDislike(id, currentUserId);
+            _pictureRepository.CreateDislike(id, currentUserId);
+            //_uow.Commit();
         }
 
         public BllPicture FindPicture(int id)

@@ -12,11 +12,11 @@ namespace DAL.Interface.IRepositories
     {
         IEnumerable<DalPicture> GetAllPictures();
         IEnumerable<DalPicture> GetUserPictures(int id);
-        bool CreatePicture(IEnumerable<HttpPostedFileBase> fileUpload, string name, string description, string email);
-        bool UpdatePicture(DalPicture picture);
-        bool RemovePicture(int id);
-        bool CreateLike(int id, int currentUserId);
-        bool CreateDislike(int id, int currentUserId);
+        void CreatePicture(string url, string name, string description, string email);
+        void UpdatePicture(DalPicture picture);
+        void RemovePicture(int id);
+        void CreateLike(int id, int currentUserId);
+        void CreateDislike(int id, int currentUserId);
         DalPicture FindPicture(int id);
         int GetCurrentUserId();
     }

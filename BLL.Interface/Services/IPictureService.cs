@@ -13,11 +13,11 @@ namespace BLL.Interface.Services
     {
         IEnumerable<BllPicture> GetAllPictures();
         IEnumerable<BllPicture> GetUserPictures(int id);
-        bool CreatePicture(IEnumerable<HttpPostedFileBase> fileUpload, string name, string description, string userEmail);
-        bool UpdatePicture(BllPicture picture);
-        bool RemovePicture(int id);
-        bool CreateLike(int id, int currentUserId);
-        bool CreateDislike(int id, int currentUserId);
+        void CreatePicture(HttpPostedFileBase fileUpload, string name, string description, string userEmail);
+        void UpdatePicture(BllPicture picture);
+        void RemovePicture(int id);
+        void CreateLike(int id, int currentUserId);
+        void CreateDislike(int id, int currentUserId);
         BllPicture FindPicture(int id);
         int GetCurrentUserId();
     }

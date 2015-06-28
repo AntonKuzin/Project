@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
@@ -12,11 +13,16 @@ namespace DAL.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ProjectDbEntities1 _context = new ProjectDbEntities1();
+        private readonly DbContext _context;
+
+        public UserRepository(DbContext uow)
+        {
+            _context = uow;
+        }
 
         public IEnumerable<DalUser> GetAllUsers()
         {
-            return _context.Users.Select(u => new DalUser()
+            return _context.Set<Users>().Select(u => new DalUser()
             {
                 Id = u.Id,
                 Email = u.Email,
@@ -32,7 +38,7 @@ namespace DAL.Repositories
         public bool CreateUser(DalUser user)
         {
             if (user.Id != 0) return false;
-            _context.Users.Add(user.ToUser());
+            _context.Set<Users>().Add(user.ToUser());
             _context.SaveChanges();
             return true;
         }
@@ -44,10 +50,10 @@ namespace DAL.Repositories
 
         public bool RemoveUser(int id)
         {
-            Users user = _context.Users.FirstOrDefault(u => u.Id == id);
+            Users user = _context.Set<Users>().FirstOrDefault(u => u.Id == id);
             if (user != null)
             {
-                _context.Users.Remove(user);
+                _context.Set<Users>().Remove(user);
                 _context.SaveChanges();
                 return true;
             }
@@ -57,16 +63,16 @@ namespace DAL.Repositories
 
         public bool BanUser(int id)
         {
-            var role = _context.Roles.FirstOrDefault(r => r.Name == "banned");
+            var role = _context.Set<Roles>().FirstOrDefault(r => r.Name == "banned");
             if (role != null)
             {
-                var user = _context.Users.FirstOrDefault(u => u.Id == id);
+                var user = _context.Set<Users>().FirstOrDefault(u => u.Id == id);
                 if (user != null)
                 {
                     if (!user.Roles.Contains(role))
                     {
                         user.Roles.Add(role);
-                        _context.Users.AddOrUpdate(user);
+                        _context.Set<Users>().AddOrUpdate(user);
                         _context.SaveChanges();
                     }
                     return true;
@@ -78,14 +84,14 @@ namespace DAL.Repositories
 
         public bool UnBanUser(int id)
         {
-            var role = _context.Roles.FirstOrDefault(r => r.Name == "banned");
+            var role = _context.Set<Roles>().FirstOrDefault(r => r.Name == "banned");
             if (role != null)
             {
-                var user = _context.Users.FirstOrDefault(u => u.Id == id);
+                var user = _context.Set<Users>().FirstOrDefault(u => u.Id == id);
                 if (user != null)
                 {
                     user.Roles.Remove(role);
-                    _context.Users.AddOrUpdate(user);
+                    _context.Set<Users>().AddOrUpdate(user);
                     _context.SaveChanges();
                     return true;
                 }

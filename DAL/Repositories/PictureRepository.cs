@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.IO;
@@ -15,91 +16,77 @@ namespace DAL.Repositories
 {
     public class PictureRepository : IPictureRepository
     {
-        private readonly ProjectDbEntities1 _context = new ProjectDbEntities1();
+        private readonly DbContext _context;
+
+        public PictureRepository(DbContext uow)
+        {
+            _context = uow;
+        }
 
         public IEnumerable<DalPicture> GetAllPictures()
         {
-            return _context.Pictures.Select(
-                picture => new DalPicture() 
-                    {
-                        Id = picture.Id,
-                        Description = picture.Description,
-                        Name = picture.Name,
-                        Url = picture.Url,
-                        UserId = picture.UserId,
-                        Likes = picture.Likes,
-                        User = picture.Users
-                    }
+            return _context.Set<Pictures>().Select(u => new DalPicture()
+            {
+                Id = u.Id,
+                Description = u.Description,
+                Likes = u.Likes,
+                Name = u.Name,
+                Url = u.Url,
+                User = u.Users,
+                UserId = u.UserId
+            }
                 );
         }
 
         public IEnumerable<DalPicture> GetUserPictures(int id)
         {
-            return _context.Users.Single(j => j.Id == id).Pictures.Select(u => u.ToDalPicture());
+            return _context.Set<Users>().Single(j => j.Id == id).Pictures.Select(u => u.ToDalPicture());
         }
 
-        public bool CreatePicture(IEnumerable<HttpPostedFileBase> fileUpload, string name, string description,
-            string email)
+        public void CreatePicture(string url, string name, string description, string email)
         {
+
             var picture = new ORM.Pictures();
-            foreach (var item in fileUpload)
-            {
-                if (item == null) continue;
-                string pathToOriginals = HttpContext.Current.Server.MapPath("~/Pictures/Originals");
-                string pathToSmall = HttpContext.Current.Server.MapPath("~/Pictures/Small");
-                string filename = item.FileName;
-                if (filename != null)
-                {
-                    Random rnd = new Random();
-                    int temp = rnd.Next(10000);
-                    filename = temp + filename;
-                    item.SaveAs(Path.Combine(pathToOriginals, filename));
-                    item.SaveAs(Path.Combine(pathToSmall, filename));
-                    picture.Url = filename;
-                    picture.UserId = _context.Users.Single(u => u.Email == email).Id;
-                    picture.Name = name;
-                    picture.Description = description;
-                    _context.Pictures.Add(picture);
-                    _context.SaveChanges();
-                }
-            }
-            return true;
+            picture.Url = url;
+            picture.UserId = _context.Set<Users>().Single(u => u.Email == email).Id;
+            picture.Name = name;
+            picture.Description = description;
+            _context.Set<Pictures>().Add(picture);
+            _context.SaveChanges();
+                
+            
         }
 
-        public bool UpdatePicture(DalPicture picture)
+        public void UpdatePicture(DalPicture picture)
         {
             if (picture == null)
-                return false;
+                return ;
             if (GetCurrentUserId() == picture.UserId)
             {
                 _context.Entry(picture.ToPictures()).State = EntityState.Modified;
                 _context.SaveChanges();
-                return true;
             }
-            return false;
         }
 
-        public bool RemovePicture(int id)
+        public void RemovePicture(int id)
         {
-            var picture = _context.Pictures.FirstOrDefault(u => u.Id == id);
+            var picture = _context.Set<Pictures>().FirstOrDefault(u => u.Id == id);
             if (picture != null)
                 if (GetCurrentUserId() == picture.UserId)
                 {
                     File.Delete(HttpContext.Current.Server.MapPath("~/Pictures/Originals/") + picture.Url);
                     File.Delete(HttpContext.Current.Server.MapPath("~/Pictures/Small/") + picture.Url);
-                    _context.Pictures.Remove(picture);
+                    _context.Set<Pictures>().Remove(picture);
                     _context.SaveChanges();
-                    return true;
                 }
-            return false;
         }
 
-        public bool CreateLike(int id, int currentUserId)
+        public void CreateLike(int id, int currentUserId)
         {
             if (id == 0)
-                return false;
+                return;
             var temp =
-                (from n in _context.Likes
+                (from n in _context.Set<Likes>()
                  where n.PictureId == id && n.UserId == currentUserId
                  select n)
                 .FirstOrDefault();
@@ -107,30 +94,28 @@ namespace DAL.Repositories
             if (temp == null)
             {
                 temp = new ORM.Likes() { Like = true, PictureId = id, UserId = currentUserId };
-                _context.Likes.Add(temp);
+                _context.Set<Likes>().Add(temp);
             }
             else
             {
                 if (temp.Like == true)
-                    _context.Likes.Remove(temp);
+                    _context.Set<Likes>().Remove(temp);
                 else
                 {
                     temp.Like = true;
-                    _context.Likes.AddOrUpdate(temp);
+                    _context.Set<Likes>().AddOrUpdate(temp);
                 }
             }
 
             _context.SaveChanges();
-
-            return true;
         }
 
-        public bool CreateDislike(int id, int currentUserId)
+        public void CreateDislike(int id, int currentUserId)
         {
             if (id == 0)
-                return false;
+                return;
             var temp =
-                (from n in _context.Likes
+                (from n in _context.Set<Likes>()
                  where n.PictureId == id && n.UserId == currentUserId
                  select n)
                 .FirstOrDefault();
@@ -138,28 +123,27 @@ namespace DAL.Repositories
             if (temp == null)
             {
                 temp = new ORM.Likes() { Like = false, PictureId = id, UserId = currentUserId };
-                _context.Likes.Add(temp);
+                _context.Set<Likes>().Add(temp);
             }
             else
             {
                 if (temp.Like == false)
-                    _context.Likes.Remove(temp);
+                    _context.Set<Likes>().Remove(temp);
                 else
                 {
                     temp.Like = false;
-                    _context.Likes.AddOrUpdate(temp);
+                    _context.Set<Likes>().AddOrUpdate(temp);
                 }
             }
 
             _context.SaveChanges();
 
-            return true;
         }
 
         public DalPicture FindPicture(int id)
         {
             if (id != 0)
-                return _context.Pictures.Find(id).ToDalPicture();
+                return _context.Set<Pictures>().Find(id).ToDalPicture();
             return null;
                 
         }
@@ -167,7 +151,7 @@ namespace DAL.Repositories
         public int GetCurrentUserId()
         {
             if (HttpContext.Current.User.Identity.IsAuthenticated)
-                return _context.Users.First(u => u.Email == HttpContext.Current.User.Identity.Name).Id;
+                return _context.Set<Users>().First(u => u.Email == HttpContext.Current.User.Identity.Name).Id;
             return 0;
         }
     }

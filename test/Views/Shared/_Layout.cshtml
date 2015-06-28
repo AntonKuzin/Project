@@ -30,11 +30,13 @@
                                 <li>@Html.ActionLink("Выход", "LogOff", "Account")</li>
                             </ul>
                         </div>
-                        
-                        <div class="navigation_panel">
-                            <a href="/Picture/Create" class="button18">Загрузить картинку</a>
-                        </div>
-                        
+                        if (!User.IsInRole("banned"))
+                         {
+                             <div class="navigation_panel">
+                                 <a href="/Picture/Create" class="button18">Загрузить картинку</a>
+                             </div>
+                         }
+
                         if (User.IsInRole("admin"))
                         {
                             <div class="admin_panel">
@@ -61,9 +63,18 @@
 
         <div class="content">
             <div class="body">
-
+                @if (!User.IsInRole("banned"))
+                {
                     @RenderSection("featured", required: false)
                     @RenderBody()
+                }
+                else
+                {
+                    <h3>Вы забанены! Обратитесь к администратору: mail@admina.ru</h3>
+                    <div style="display: none">
+                        @RenderBody()
+                    </div>
+                }
 
                
             </div>

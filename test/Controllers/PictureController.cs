@@ -51,7 +51,7 @@ namespace test.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IEnumerable<HttpPostedFileBase> fileUpload)
+        public ActionResult Create(HttpPostedFileBase fileUpload)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace test.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(_repository.UpdatePicture(pictures.ToBllPicture()))
+                _repository.UpdatePicture(pictures.ToBllPicture());
                 return RedirectToAction("Index");
             }
             ModelState.AddModelError("", "Произошла ошибка!");
@@ -110,10 +110,8 @@ namespace test.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            if (_repository.RemovePicture(id))
+            _repository.RemovePicture(id);
                 return RedirectToAction("Index","Home");
-            ModelState.AddModelError("", "Произошла ошибка!");
-                return View();
         }
 
 
