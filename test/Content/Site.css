@@ -242,3 +242,10 @@ a.disliked {
 .author a {
     color: crimson;
 }
+
+.navigation_panel {
+    display: inline-block;
+    float: right;
+    padding: 15px 5px;
+    margin-top: 3.17em;
+}

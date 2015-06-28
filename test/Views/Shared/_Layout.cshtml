@@ -31,12 +31,15 @@
                             </ul>
                         </div>
                         
-                        @Html.ActionLink("Загрузить картинку","Create","Picture")
+                        <div class="navigation_panel">
+                            <a href="/Picture/Create" class="button18">Загрузить картинку</a>
+                        </div>
+                        
                         if (User.IsInRole("admin"))
                         {
                             <div class="admin_panel">
                                 <h3>У Вас есть права администратора.</h3>
-                                @Html.ActionLink("Администрование", "Index", "Account")
+                                <a href="/Account/Index" class="button18">Администрирование</a>
                             </div>
                         }
             
