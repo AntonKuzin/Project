@@ -19,11 +19,11 @@
             </div>
         }
         <div class="navigation_buttons">
-            <a href="/" class="button18">На главную</a>
+            <a href="/" class="button18">Index</a>
             @if (User.Identity.Name == Model.UserEmail)
             {
-                @Html.ActionLink("Редактировать", "Edit", "Picture", new {id = Model.Id}, new {@class = "button18"})
-                @Html.ActionLink("Удалить", "Delete", "Picture", new {id = Model.Id}, new {@class = "button18"})
+                @Html.ActionLink("Edit", "Edit", "Picture", new {id = Model.Id}, new {@class = "button18"})
+                @Html.ActionLink("Delete", "Delete", "Picture", new {id = Model.Id}, new {@class = "button18"})
             }
         </div>      
         
