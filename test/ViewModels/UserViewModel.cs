@@ -9,15 +9,15 @@ namespace test.ViewModels
     public class UserViewModel
     {
 
-        [Display(Name = "Имя пользователя")]
+        [Display(Name = "Username")]
         public string Name { get; set; }
 
-        [Display(Name = "Email пользователя")]
+        [Display(Name = "User email")]
         public string Email { get; set; }
 
         public int Id { get; set; }
 
-        [Display(Name = "Роль пользователя в системе")]
+        [Display(Name = "User roles")]
         public IEnumerable<ORM.Roles> Roles { get; set; }
 
         

@@ -8,21 +8,21 @@ namespace test.ViewModels
         [ScaffoldColumn(false)]
         public int Id { get; set; }
 
-        [Display(Name = "Введите email")]
-        [Required(ErrorMessage = "Поле обязательно для заполнения")]
-        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Некорректный email")]
+        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Required field")]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Wrong email format")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Введите пароль")]
-        [StringLength(100, ErrorMessage = "Пароль должен содержать по крайней мере {2} символов.", MinimumLength = 6)]
+        [Required(ErrorMessage = "Password")]
+        [StringLength(100, ErrorMessage = "Password cannot be less than {2} characters.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Введите пароль")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Подтвердите пароль")]
+        [Required(ErrorMessage = "Repeat password")]
         [DataType(DataType.Password)]
-        [Display(Name = "Подтвердите пароль")]
-        [Compare("Password", ErrorMessage = "Пароли должны совпадать.")]
+        [Display(Name = "Repeat password")]
+        [Compare("Password", ErrorMessage = "Passwords must match.")]
         public string ConfirmPassword { get; set; }
 
         [Required]

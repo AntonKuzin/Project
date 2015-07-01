@@ -27,21 +27,21 @@
                             <ul>
                                 <li>@User.Identity.Name</li>
 
-                                <li>@Html.ActionLink("Выход", "LogOff", "Account")</li>
+                                <li>@Html.ActionLink("Log off", "LogOff", "Account")</li>
                             </ul>
                         </div>
                         if (!User.IsInRole("banned"))
                          {
                              <div class="navigation_panel">
-                                 <a href="/Picture/Create" class="button18">Загрузить картинку</a>
+                                 <a href="/Picture/Create" class="button18">Upload picture</a>
                              </div>
                          }
 
                         if (User.IsInRole("admin"))
                         {
                             <div class="admin_panel">
-                                <h3>У Вас есть права администратора.</h3>
-                                <a href="/Account/Index" class="button18">Администрирование</a>
+                                <h3>You are admininstrator.</h3>
+                                <a href="/Account/Index" class="button18">Users managing</a>
                             </div>
                         }
             
@@ -50,8 +50,8 @@
                     {
                         <div class="user_panel">
                             <ul>
-                                <li>@Html.ActionLink("Вход", "Login", "Account")</li>
-                                <li>@Html.ActionLink("Регистрация", "Register", "Account")</li>
+                                <li>@Html.ActionLink("Login", "Login", "Account")</li>
+                                <li>@Html.ActionLink("Register", "Register", "Account")</li>
                             </ul>
                         </div>
                         
@@ -70,7 +70,7 @@
                 }
                 else
                 {
-                    <h3>Вы забанены! Обратитесь к администратору: mail@admina.ru</h3>
+                    <h3>You are banned! Please, contact administrator: mail@admina.ru</h3>
                     <div style="display: none">
                         @RenderBody()
                     </div>

@@ -1,11 +1,10 @@
-﻿@using Roles = ORM.Roles
-@model IEnumerable<test.ViewModels.UserViewModel>
+﻿@model IEnumerable<test.ViewModels.UserViewModel>
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Зарегистрированные пользователи</h2>
+<h2>Registered users</h2>
 
 <table>
     <tr>
@@ -20,10 +19,10 @@
             @Html.DisplayNameFor(model => model.Roles)
         </th>
         <th>
-            Забанен?
+            Is banned?
         </th>
         <th>
-            Действие:
+            Action:
         </th>
     </tr>
 
@@ -48,21 +47,21 @@
         <td>
             @if (item.Roles.SingleOrDefault(u => u.Name == "banned") != null)
             {
-                <span>Да</span>
+                <span>Yes</span>
             }
             else
             {
-                <span>Нет</span>
+                <span>No</span>
             }
         </td>
         <td>
             @if (item.Roles.SingleOrDefault(u => u.Name == "banned") != null)
             {
-                @Html.ActionLink("Разбанить!", "UnBan",new { id=item.Id })
+                @Html.ActionLink("Unban!", "UnBan",new { id=item.Id })
             }
             else
             {
-                @Html.ActionLink("Забанить!","Ban",new { id=item.Id })
+                @Html.ActionLink("Ban!","Ban",new { id=item.Id })
             }
         </td>
     </tr>
