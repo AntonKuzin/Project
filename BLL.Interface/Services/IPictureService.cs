@@ -20,5 +20,7 @@ namespace BLL.Interface.Services
         void CreateDislike(int id, int currentUserId);
         BllPicture FindPicture(int id);
         int GetCurrentUserId();
+        IEnumerable<BllPicture> GetPagePictures(int page, int pageItems);
+        IEnumerable<BllPicture> GetUserPagePictures(int page, int pageItems, int userId);
     }
 }

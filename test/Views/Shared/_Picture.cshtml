@@ -6,7 +6,7 @@
 </div>
 <div class="author">
     <span>Author:</span>
-    @Html.ActionLink(Model.UserEmail,"UserPictures","Picture", new {id = Model.UserId}, "")
+    @Html.ActionLink(Model.UserEmail,"UserPictures","Picture", new {userId = Model.UserId}, "")
 </div>
 <a href="/Picture/ShowPhoto?id=@Model.Id"><img src =@("/Pictures/Small/" + Model.Url) width="250px" /></a>
 @if(User.Identity.IsAuthenticated)

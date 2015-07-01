@@ -19,5 +19,7 @@ namespace DAL.Interface.IRepositories
         void CreateDislike(int id, int currentUserId);
         DalPicture FindPicture(int id);
         int GetCurrentUserId();
+        IEnumerable<DalPicture> GetPagePictures(int page, int pageItems);
+        IEnumerable<DalPicture> GetUserPagePictures(int page, int pageItems, int userId);
     }
 }

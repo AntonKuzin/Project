@@ -6,41 +6,49 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Url)
-        </th>
-        <th></th>
-    </tr>
+<div id="scrolList">
+    @Html.Partial("_Pictures")
+</div>
+ 
+<div id="loading"><img src='@Url.Content("~/Content/loading_spinner.gif")'></div>
+ 
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script type="text/javascript">
+    $(function () {
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Url)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) 
-            @Html.ActionLink("like", "Like", new { id=item.Id })
-            @Html.ActionLink("dislike", "Dislike", new { id=item.Id })
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+        $('div#loading').hide();
 
-</table>
+        var page = 0;
+        var _inCallback = false;
+        function loadItems() {
+            if (page > -1 && !_inCallback) {
+                _inCallback = true;
+                page++;
+                $('div#loading').show();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/Picture/Index/' + page,
+                    success: function (data, textstatus) {
+                        if (data != '') {
+                            $("#scrolList").append(data);
+                        }
+                        else {
+                            page = -1;
+                        }
+                        _inCallback = false;
+                        $("div#loading").hide();
+                    }
+                });
+            }
+        }
+        // обработка события скроллинга
+        $(window).scroll(function () {
+            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+
+                loadItems();
+            }
+        });
+    })
+</script>

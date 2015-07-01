@@ -154,5 +154,46 @@ namespace DAL.Repositories
                 return _context.Set<Users>().First(u => u.Email == HttpContext.Current.User.Identity.Name).Id;
             return 0;
         }
+
+
+        public IEnumerable<DalPicture> GetPagePictures(int page, int pageItems)
+        {
+            return _context.Set<Pictures>()
+                .OrderBy(u => u.Id)
+                .Skip(page * pageItems)
+                .Take(pageItems)
+                .Select(u => new DalPicture()
+                {
+                    Id = u.Id,
+                    Description = u.Description,
+                    Likes = u.Likes,
+                    Name = u.Name,
+                    Url = u.Url,
+                    User = u.Users,
+                    UserId = u.UserId
+                }
+                );
+        }
+
+
+        public IEnumerable<DalPicture> GetUserPagePictures(int page, int pageItems, int userId)
+        {
+            return _context.Set<Pictures>()
+                .Where(u => u.UserId == userId)
+                .OrderBy(u => u.Id)
+                .Skip(page * pageItems)
+                .Take(pageItems)
+                .Select(u => new DalPicture()
+                {
+                    Id = u.Id,
+                    Description = u.Description,
+                    Likes = u.Likes,
+                    Name = u.Name,
+                    Url = u.Url,
+                    User = u.Users,
+                    UserId = u.UserId
+                }
+                );
+        }
     }
 }

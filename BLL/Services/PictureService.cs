@@ -40,6 +40,7 @@ namespace BLL.Services
         {
             // получаем расширение
             var ext = fileUpload.FileName.Substring(fileUpload.FileName.LastIndexOf(".") + 1);
+            if (ext == "jpeg") ext = "jpg";
 
             Random rnd = new Random();
             int temp = rnd.Next(10000);
@@ -114,6 +115,20 @@ namespace BLL.Services
         public int GetCurrentUserId()
         {
             return _pictureRepository.GetCurrentUserId();
+        }
+
+
+
+
+        public IEnumerable<BllPicture> GetPagePictures(int page, int pageItems)
+        {
+            return _pictureRepository.GetPagePictures(page, pageItems).Select(u => u.ToBllPicture());
+        }
+
+
+        public IEnumerable<BllPicture> GetUserPagePictures(int page, int pageItems, int userId)
+        {
+            return _pictureRepository.GetUserPagePictures(page, pageItems, userId).Select(u => u.ToBllPicture());
         }
     }
 }

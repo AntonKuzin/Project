@@ -19,22 +19,28 @@ namespace test.Controllers
     public class PictureController : Controller
     {
         private readonly IPictureService _repository;
+        int pageItems = 4;
 
         public PictureController(IPictureService repository)
         {
             _repository = repository;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            var model = from u in _repository.GetAllPictures()
-                        select new PictureViewModel
-                        {
-                            Description = u.Description,
-                            Name = u.Name,
-                            Url = u.Url,
-                            Id = u.Id
-                        };
+            int pageItems = 4;
+            int page = id ?? 0;
+            int userId = _repository.GetCurrentUserId();
+            var model = _repository
+                .GetPagePictures(page, pageItems)
+                .Select(u => u.ToMvcPicture(userId));
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Pictures", _repository
+                    .GetPagePictures(page, pageItems)
+                    .Select(u => u.ToMvcPicture(userId))
+                    );
+            }
             return View(model);
         }
 
@@ -166,23 +172,23 @@ namespace test.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult UserPictures(int id)
+        public ActionResult UserPictures(int userId)
         {
+            ViewBag.userId = userId;
             int currentUserId = _repository.GetCurrentUserId();
-            var model = from u in _repository.GetUserPictures(id)
-                        select new PictureViewModel
-                        {
-                            Description = u.Description,
-                            Name = u.Name,
-                            Url = u.Url,
-                            Id = u.Id,
-                            Like = u.Likes.SingleOrDefault(j => j.UserId == currentUserId && j.PictureId == u.Id),
-                            UserId = u.UserId,
-                            UserEmail = u.User.Email,
-                            Rating =
-                                u.Likes.Count(j => j.Like == true) - u.Likes.Count(j => j.Like == false)
-                        };
+            var model = _repository.GetUserPagePictures(0, pageItems, userId).Select(u => u.ToMvcPicture(currentUserId)) ;
             return View(model);
+        }
+
+        [AllowAnonymous]
+        public PartialViewResult GetPagePictures(int? page, int userId)
+        {
+            int temp = page ?? 1;
+            int currentUserId = _repository.GetCurrentUserId();
+            var model = _repository
+                .GetUserPagePictures(temp, pageItems, userId)
+                .Select(u => u.ToMvcPicture(currentUserId));
+            return PartialView("_Pictures", model);
         }
 
         //protected override void Dispose(bool disposing)
