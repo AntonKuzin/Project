@@ -9,7 +9,7 @@
     </div>
 
 
-    <img style="display: block; margin: 0 auto; max-width: 900px" src =@("/Pictures/Originals/" + Model.Url)  />
+    <img style="display: block; margin: 0 auto; max-width: 900px" src =@Url.Action("Image", "Picture", new {id = Model.Id} )  />
     <div class ="buttons">
         @if (User.Identity.IsAuthenticated)
         {

@@ -89,10 +89,11 @@ namespace DAL
                 Id = dalPicture.Id,
                 Description = dalPicture.Description,
                 Name = dalPicture.Name,
-                Url = dalPicture.Url,
+                BinaryData = dalPicture.BinaryData,
                 UserId = dalPicture.UserId,
                 Likes = dalPicture.Likes,
-                Users = dalPicture.User
+                Users = dalPicture.User,
+                Extension = dalPicture.Extension
             };
         }
 
@@ -103,10 +104,11 @@ namespace DAL
                 Id = picture.Id,
                 Description = picture.Description,
                 Name = picture.Name,
-                Url = picture.Url,
+                BinaryData = picture.BinaryData,
                 UserId = picture.UserId,
                 Likes = picture.Likes,
-                User = picture.Users
+                User = picture.Users,
+                Extension = picture.Extension
             };
         }
 

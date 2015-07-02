@@ -47,63 +47,60 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlbumDataModel.Context.cs">
+    <Compile Include="AlbumDmModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AlbumDataModel.Context.tt</DependentUpon>
+      <DependentUpon>AlbumDmModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="AlbumDataModel.cs">
+    <Compile Include="AlbumDmModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AlbumDataModel.tt</DependentUpon>
+      <DependentUpon>AlbumDmModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="AlbumDataModel.Designer.cs">
+    <Compile Include="AlbumDmModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AlbumDataModel.edmx</DependentUpon>
+      <DependentUpon>AlbumDmModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Likes.cs">
-      <DependentUpon>AlbumDataModel.tt</DependentUpon>
+      <DependentUpon>AlbumDmModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Pictures.cs">
-      <DependentUpon>AlbumDataModel.tt</DependentUpon>
+      <DependentUpon>AlbumDmModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles.cs">
-      <DependentUpon>AlbumDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sysdiagrams.cs">
-      <DependentUpon>AlbumDataModel.tt</DependentUpon>
+      <DependentUpon>AlbumDmModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Users.cs">
-      <DependentUpon>AlbumDataModel.tt</DependentUpon>
+      <DependentUpon>AlbumDmModel.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="AlbumDataModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>AlbumDataModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="AlbumDataModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AlbumDataModel.edmx</DependentUpon>
-      <LastGenOutput>AlbumDataModel.Context.cs</LastGenOutput>
-    </None>
-    <None Include="AlbumDataModel.edmx.diagram">
-      <DependentUpon>AlbumDataModel.edmx</DependentUpon>
-    </None>
-    <None Include="AlbumDataModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AlbumDataModel.edmx</DependentUpon>
-      <LastGenOutput>AlbumDataModel.cs</LastGenOutput>
-    </None>
-    <None Include="App.Config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="AlbumDmModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AlbumDmModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AlbumDmModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AlbumDmModel.edmx</DependentUpon>
+      <LastGenOutput>AlbumDmModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="AlbumDmModel.edmx.diagram">
+      <DependentUpon>AlbumDmModel.edmx</DependentUpon>
+    </None>
+    <None Include="AlbumDmModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AlbumDmModel.edmx</DependentUpon>
+      <LastGenOutput>AlbumDmModel.cs</LastGenOutput>
+    </None>
+    <None Include="App.Config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -30,7 +30,7 @@ namespace test.Controllers
                 {
                     Description = u.Description,
                     Name = u.Name,
-                    Url = u.Url,
+                    Url = "",
                     Id = u.Id,
                     Like = u.Likes.SingleOrDefault(j => j.UserId == id && j.PictureId == u.Id),
                     UserEmail = u.User.Email,

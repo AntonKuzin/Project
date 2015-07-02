@@ -15,7 +15,7 @@ namespace DependencyModule
         public override void Load()
         {
             Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
-            Bind<DbContext>().To<ProjectDbEntities1>().InRequestScope();
+            Bind<DbContext>().To<AlbumDbEntities>().InRequestScope();
 
             Bind<IPictureService>().To<PictureService>();
             Bind<IPictureRepository>().To<PictureRepository>();

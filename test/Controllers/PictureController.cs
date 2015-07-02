@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
@@ -131,7 +135,7 @@ namespace test.Controllers
                 Id = temp.Id,
                 Name = temp.Name,
                 Like = temp.Likes.SingleOrDefault(j => j.UserId == currentUserId && j.PictureId == temp.Id),
-                Url = temp.Url
+                Url = ""
             };
 
             return PartialView("_Buttons", model);
@@ -147,11 +151,38 @@ namespace test.Controllers
                 Id = temp.Id,
                 Name = temp.Name,
                 Like = temp.Likes.SingleOrDefault(j => j.UserId == currentUserId && j.PictureId == temp.Id),
-                Url = temp.Url
+                Url = ""
             };
 
             return PartialView("_Buttons", model);
 
+        }
+
+        [AllowAnonymous]
+        public ActionResult Image(int id)
+        {
+            var picture = _repository.FindPicture(id).ToPicture();
+            MemoryStream ms = new MemoryStream(picture.BinaryData);
+  
+            var ci = new Bitmap(System.Drawing.Image.FromStream(ms));
+
+            var versions = new Dictionary<string, ImageFormat>();
+            versions.Add("jpg", ImageFormat.Jpeg);
+            versions.Add("jpeg", ImageFormat.Jpeg);
+            versions.Add("png", ImageFormat.Png);
+            versions.Add("bmp", ImageFormat.Bmp);
+            versions.Add("gif", ImageFormat.Gif);
+
+            // Change the response headers to output a JPEG image.
+            this.Response.Clear();
+            this.Response.ContentType = "image/" + picture.Extension;
+
+            // Write the image to the response stream in JPEG format.
+            ci.Save(this.Response.OutputStream, versions[picture.Extension]);
+
+            // Dispose of the CAPTCHA image object.
+            ci.Dispose();
+            return null;
         }
 
         [AllowAnonymous]
@@ -164,7 +195,7 @@ namespace test.Controllers
                 Id = temp.Id,
                 Name = temp.Name,
                 Like = temp.Likes.SingleOrDefault(j => j.UserId == currentUserId && j.PictureId == temp.Id),
-                Url = temp.Url,
+                Url = "",
                 UserEmail = temp.User.Email
             };
 

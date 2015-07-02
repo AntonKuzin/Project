@@ -31,9 +31,10 @@ namespace DAL.Repositories
                 Description = u.Description,
                 Likes = u.Likes,
                 Name = u.Name,
-                Url = u.Url,
+                BinaryData = u.BinaryData,
                 User = u.Users,
-                UserId = u.UserId
+                UserId = u.UserId,
+                Extension = u.Extension
             }
                 );
         }
@@ -43,18 +44,12 @@ namespace DAL.Repositories
             return _context.Set<Users>().Single(j => j.Id == id).Pictures.Select(u => u.ToDalPicture());
         }
 
-        public void CreatePicture(string url, string name, string description, string email)
+        public void CreatePicture(DalPicture picture, string email)
         {
-
-            var picture = new ORM.Pictures();
-            picture.Url = url;
             picture.UserId = _context.Set<Users>().Single(u => u.Email == email).Id;
-            picture.Name = name;
-            picture.Description = description;
-            _context.Set<Pictures>().Add(picture);
+            _context.Set<Pictures>().Add(picture.ToPictures());
             _context.SaveChanges();
-                
-            
+
         }
 
         public void UpdatePicture(DalPicture picture)
@@ -74,8 +69,6 @@ namespace DAL.Repositories
             if (picture != null)
                 if (GetCurrentUserId() == picture.UserId)
                 {
-                    File.Delete(HttpContext.Current.Server.MapPath("~/Pictures/Originals/") + picture.Url);
-                    File.Delete(HttpContext.Current.Server.MapPath("~/Pictures/Small/") + picture.Url);
                     _context.Set<Pictures>().Remove(picture);
                     _context.SaveChanges();
                 }
@@ -151,7 +144,11 @@ namespace DAL.Repositories
         public int GetCurrentUserId()
         {
             if (HttpContext.Current.User.Identity.IsAuthenticated)
-                return _context.Set<Users>().First(u => u.Email == HttpContext.Current.User.Identity.Name).Id;
+            {
+                var temp = _context.Set<Users>().FirstOrDefault(u => u.Email == HttpContext.Current.User.Identity.Name);
+                if (temp != null)
+                    return temp.Id;
+            }
             return 0;
         }
 
@@ -168,9 +165,10 @@ namespace DAL.Repositories
                     Description = u.Description,
                     Likes = u.Likes,
                     Name = u.Name,
-                    Url = u.Url,
+                    BinaryData = u.BinaryData,
                     User = u.Users,
-                    UserId = u.UserId
+                    UserId = u.UserId,
+                    Extension = u.Extension
                 }
                 );
         }
@@ -189,9 +187,10 @@ namespace DAL.Repositories
                     Description = u.Description,
                     Likes = u.Likes,
                     Name = u.Name,
-                    Url = u.Url,
+                    BinaryData = u.BinaryData,
                     User = u.Users,
-                    UserId = u.UserId
+                    UserId = u.UserId,
+                    Extension = u.Extension
                 }
                 );
         }

@@ -18,10 +18,11 @@ namespace test.Infrastructure
                 Id = bllPicture.Id,
                 Description = bllPicture.Description,
                 Name = bllPicture.Name,
-                Url = bllPicture.Url,
+                BinaryData = bllPicture.BinaryData,
                 UserId = bllPicture.UserId,
                 Likes = bllPicture.Likes,
-                Users = bllPicture.User
+                Users = bllPicture.User,
+                Extension = bllPicture.Extension
             };
         }
 
@@ -32,10 +33,11 @@ namespace test.Infrastructure
                 Id = picture.Id,
                 Description = picture.Description,
                 Name = picture.Name,
-                Url = picture.Url,
+                BinaryData = picture.BinaryData,
                 UserId = picture.UserId,
                 Likes = picture.Likes,
-                User = picture.Users
+                User = picture.Users,
+                Extension = picture.Extension
             };
         }
 
@@ -48,7 +50,7 @@ namespace test.Infrastructure
                 Like = bllPicture.Likes.SingleOrDefault(j => j.UserId == currentUserId && j.PictureId == bllPicture.Id),
                 Name = bllPicture.Name,
                 Rating = bllPicture.Likes.Count(j => j.Like == true) - bllPicture.Likes.Count(j => j.Like == false),
-                Url = bllPicture.Url,
+                Url = "",
                 UserEmail = bllPicture.User.Email,
                 UserId = bllPicture.UserId
             };

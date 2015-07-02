@@ -21,9 +21,10 @@ namespace ORM
     
         public int Id { get; set; }
         public string Name { get; set; }
+        public byte[] BinaryData { get; set; }
         public string Description { get; set; }
-        public string Url { get; set; }
         public int UserId { get; set; }
+        public string Extension { get; set; }
     
         public virtual ICollection<Likes> Likes { get; set; }
         public virtual Users Users { get; set; }

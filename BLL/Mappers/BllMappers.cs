@@ -70,10 +70,11 @@ namespace BLL.Mappers
                 Id = bllPicture.Id,
                 Description = bllPicture.Description,
                 Name = bllPicture.Name,
-                Url = bllPicture.Url,
+                BinaryData = bllPicture.BinaryData,
                 UserId = bllPicture.UserId,
                 Likes = bllPicture.Likes,
-                User = bllPicture.User
+                User = bllPicture.User,
+                Extension = bllPicture.Extension
             };
         }
 
@@ -84,10 +85,11 @@ namespace BLL.Mappers
                 Id = dalPicture.Id,
                 Description = dalPicture.Description,
                 Name = dalPicture.Name,
-                Url = dalPicture.Url,
+                BinaryData = dalPicture.BinaryData,
                 UserId = dalPicture.UserId,
                 Likes = dalPicture.Likes,
-                User = dalPicture.User
+                User = dalPicture.User,
+                Extension = dalPicture.Extension
             };
         }
 

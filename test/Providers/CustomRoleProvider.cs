@@ -5,7 +5,6 @@ using System.Web.Security;
 using System.Linq;
 using System.Web;
 using ORM;
-using Roles = System.Web.Security.Roles;
 
 namespace test.Providers
 {
@@ -15,7 +14,7 @@ namespace test.Providers
         {
             bool outputResult = false;
             // Находим пользователя
-            using (ProjectDbEntities1 _db = new ProjectDbEntities1())
+            using (AlbumDbEntities _db = new AlbumDbEntities())
             {
                 try
                 {
@@ -45,7 +44,7 @@ namespace test.Providers
 
         public override string[] GetRolesForUser(string email)
         {
-            using (var context = new ProjectDbEntities1())
+            using (var context = new AlbumDbEntities())
             {
                 var roles = new string[]{ };
                 var user = context.Users.FirstOrDefault(u => u.Email == email);
@@ -68,7 +67,7 @@ namespace test.Providers
         public override void CreateRole(string roleName)
         {
             var newRole = new ORM.Roles() { Name = roleName };
-            using (var context = new ProjectDbEntities1())
+            using (var context = new AlbumDbEntities())
             {
                 context.Roles.Add(newRole);
                 context.SaveChanges();

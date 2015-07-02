@@ -8,7 +8,7 @@
     <span>Author:</span>
     @Html.ActionLink(Model.UserEmail,"UserPictures","Picture", new {userId = Model.UserId}, "")
 </div>
-<a href="/Picture/ShowPhoto?id=@Model.Id"><img src =@("/Pictures/Small/" + Model.Url) width="250px" /></a>
+<a href="/Picture/ShowPhoto?id=@Model.Id"><img src =@Url.Action("Image", "Picture", new {id = Model.Id} ) width="250px" /></a>
 @if(User.Identity.IsAuthenticated)
 {
     <div class ="buttons">

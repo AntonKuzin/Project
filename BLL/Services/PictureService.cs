@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Drawing;
 using System.Data.Entity.Migrations;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,38 +41,19 @@ namespace BLL.Services
         {
             // получаем расширение
             var ext = fileUpload.FileName.Substring(fileUpload.FileName.LastIndexOf(".") + 1);
-            if (ext == "jpeg") ext = "jpg";
-
-            Random rnd = new Random();
-            int temp = rnd.Next(10000);
-
-            string[] paths =
+            byte[] fileData;
+            using (var binaryReader = new BinaryReader(fileUpload.InputStream))
             {
-                HttpContext.Current.Server.MapPath("~/Pictures/Small/"),
-                HttpContext.Current.Server.MapPath("~/Pictures/Originals/")
-            };
-
-            // создаем инструкции для различных версий
-            var versions = new Dictionary<string, string>();
-            versions.Add("small", "maxwidth=250&format=" + ext);
-            versions.Add("original", "format=" + ext);
-
-            int i = 0;
-            foreach (var suffix in versions.Keys)
-            {
-                fileUpload.InputStream.Seek(0, SeekOrigin.Begin);
-
-                ImageBuilder.Current.Build(
-                    new ImageJob(
-                        fileUpload.InputStream,
-                        paths[i] + fileUpload.FileName.Remove(fileUpload.FileName.LastIndexOf(".")) + temp,
-                        new Instructions(versions[suffix]),
-                        false,
-                        true));
-                i++;
+                fileData = binaryReader.ReadBytes(fileUpload.ContentLength);
             }
-            string url = fileUpload.FileName.Remove(fileUpload.FileName.LastIndexOf(".")) + temp +"." + ext;
-            _pictureRepository.CreatePicture(url, name, description, userEmail);
+            var picture = new BllPicture()
+            {
+                Name = name,
+                Description = description,
+                BinaryData = fileData,
+                Extension = ext
+            };
+            _pictureRepository.CreatePicture(picture.ToDalPicture(), userEmail);
             //_uow.Commit();
         }
 

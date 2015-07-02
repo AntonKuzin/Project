@@ -65,7 +65,7 @@ namespace test.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильный пароль или логин");
+                    ModelState.AddModelError("", "Wrong login or password");
                 }
             }
             return View(viewModel);
@@ -88,7 +88,7 @@ namespace test.Controllers
         {
             if (viewModel.Captcha != (string)Session[CaptchaImage.CaptchaValueKey])
             {
-                ModelState.AddModelError("Captcha", "Текст с картинки введен неверно");
+                ModelState.AddModelError("Captcha", "Wrong captcha text");
                 return View(viewModel);
             }
 
@@ -96,7 +96,7 @@ namespace test.Controllers
 
             if (anyUser)
             {
-                ModelState.AddModelError("Email", "Пользователь с таким адресом уже зарегистрирован");
+                ModelState.AddModelError("Email", "User with that email already exist");
                 return View(viewModel);
             }
 
@@ -108,11 +108,11 @@ namespace test.Controllers
                 if (membershipUser != null)
                 {
                     FormsAuthentication.SetAuthCookie(viewModel.Email, false);
-                    return RedirectToAction("Index", "Account");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Ошибка при регистрации");
+                    ModelState.AddModelError("", "Reristration failure");
                 }
             }
             return View(viewModel);

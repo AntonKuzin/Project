@@ -11,7 +11,7 @@
 @using (Html.BeginForm("Create", "Picture", FormMethod.Post, new {enctype="multipart/form-data"}))  {    
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)   
-    <input type="file" name="fileUpload" accept="image/*" /><br />      
+    <input type="file" name="fileUpload" accept="image/bmp,image/jpeg,image/png,image/gif" /><br />      
     <input type="text " name="PictureName" placeholder="Name"/><br /> 
     <input type="text " name="PictureDescription" placeholder="Description"/><br /> 
     <input type="submit" name="Submit" id="SubmitSingle" value="Upload" /> 

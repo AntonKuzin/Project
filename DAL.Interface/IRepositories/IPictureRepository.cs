@@ -12,7 +12,7 @@ namespace DAL.Interface.IRepositories
     {
         IEnumerable<DalPicture> GetAllPictures();
         IEnumerable<DalPicture> GetUserPictures(int id);
-        void CreatePicture(string url, string name, string description, string email);
+        void CreatePicture(DalPicture picture, string email);
         void UpdatePicture(DalPicture picture);
         void RemovePicture(int id);
         void CreateLike(int id, int currentUserId);

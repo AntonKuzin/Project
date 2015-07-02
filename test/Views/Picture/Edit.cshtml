@@ -14,7 +14,8 @@
         <legend>PictureModel</legend>
 
         @Html.HiddenFor(model => model.Id)
-        @Html.HiddenFor(model => model.Url)
+        @Html.HiddenFor(model => model.BinaryData)
+        @Html.HiddenFor(model => model.Extension)
         @Html.HiddenFor(model => model.UserId)
 
         <div class="editor-label">

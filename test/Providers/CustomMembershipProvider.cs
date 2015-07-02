@@ -23,7 +23,7 @@ namespace test.Providers
                 return null;
             }
 
-            using (var context = new ProjectDbEntities1())
+            using (var context = new AlbumDbEntities())
             {
                 var user = new Users
                 {
@@ -38,12 +38,21 @@ namespace test.Providers
                 {
                     user.Roles.Add(role);
                 }
+                if (!context.Users.Any())
+                {
+                    var adminRole = context.Roles.FirstOrDefault(r => r.Name == "admin");
+                    if (adminRole != null)
+                    {
+                        user.Roles.Add(adminRole);
+                    }
+                }
+
 
                 user.Name = "name";
 
                 context.Users.Add(user);
                 context.SaveChanges();
-                membershipUser = GetUser(Name, false);
+                membershipUser = GetUser(user.Email, false);
                 return membershipUser;
             }
 
@@ -51,7 +60,7 @@ namespace test.Providers
 
         public override bool ValidateUser(string email, string password)
         {
-            using (var context = new ProjectDbEntities1())
+            using (var context = new AlbumDbEntities())
             {
                 Users user = (from u in context.Users
                              where u.Email == email
@@ -68,10 +77,10 @@ namespace test.Providers
 
         public override MembershipUser GetUser(string email, bool userIsOnline)
         {
-            using (var context = new ProjectDbEntities1())
+            using (var context = new AlbumDbEntities())
             {
                 var user = (from u in context.Users
-                            where u.Name == email
+                            where u.Email == email
                             select u).FirstOrDefault();
 
                 if (user == null) return null;
