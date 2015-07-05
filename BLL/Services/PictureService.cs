@@ -29,16 +29,26 @@ namespace BLL.Services
 
         public IEnumerable<BllPicture> GetAllPictures()
         {
+
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
             return _pictureRepository.GetAllPictures().Select(picture => picture.ToBllPicture());
+            
+           
         }
 
         public IEnumerable<BllPicture> GetUserPictures(int id)
         {
-            return _pictureRepository.GetUserPictures(id).Select(picture => picture.ToBllPicture());
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
+             return _pictureRepository.GetUserPictures(id).Select(picture => picture.ToBllPicture());
         }
 
         public void CreatePicture(HttpPostedFileBase fileUpload, string name, string description, string userEmail)
         {
+
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
             // получаем расширение
             var ext = fileUpload.FileName.Substring(fileUpload.FileName.LastIndexOf(".") + 1);
             byte[] fileData;
@@ -59,8 +69,10 @@ namespace BLL.Services
 
         public void UpdatePicture(BllPicture picture)
         {
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
             if (picture == null)
-                return;
+                throw new ArgumentNullException("picture_service");
             if (GetCurrentUserId() == picture.UserId)
             {
                 _pictureRepository.UpdatePicture(picture.ToDalPicture());
@@ -70,6 +82,8 @@ namespace BLL.Services
 
         public void RemovePicture(int id)
         {
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
             if (id != 0)
             {
                 _pictureRepository.RemovePicture(id);
@@ -79,24 +93,34 @@ namespace BLL.Services
 
         public void CreateLike(int id, int currentUserId)
         {
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
             _pictureRepository.CreateLike(id, currentUserId);
             //_uow.Commit();
         }
 
         public void CreateDislike(int id, int currentUserId)
         {
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
             _pictureRepository.CreateDislike(id, currentUserId);
             //_uow.Commit();
         }
 
         public BllPicture FindPicture(int id)
         {
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
             return _pictureRepository.FindPicture(id).ToBllPicture();
         }
 
         public int GetCurrentUserId()
         {
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
+
             return _pictureRepository.GetCurrentUserId();
+            
         }
 
 
@@ -104,13 +128,20 @@ namespace BLL.Services
 
         public IEnumerable<BllPicture> GetPagePictures(int page, int pageItems)
         {
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
             return _pictureRepository.GetPagePictures(page, pageItems).Select(u => u.ToBllPicture());
         }
 
 
         public IEnumerable<BllPicture> GetUserPagePictures(int page, int pageItems, int userId)
         {
+            if (_pictureRepository == null)
+                throw new NullReferenceException("service");
+
             return _pictureRepository.GetUserPagePictures(page, pageItems, userId).Select(u => u.ToBllPicture());
+
+            
         }
     }
 }

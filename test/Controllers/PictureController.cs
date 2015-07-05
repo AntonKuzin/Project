@@ -32,20 +32,28 @@ namespace test.Controllers
 
         public ActionResult Index(int? id)
         {
-            int pageItems = 4;
-            int page = id ?? 0;
-            int userId = _repository.GetCurrentUserId();
-            var model = _repository
-                .GetPagePictures(page, pageItems)
-                .Select(u => u.ToMvcPicture(userId));
-            if (Request.IsAjaxRequest())
+
+            try
             {
-                return PartialView("_Pictures", _repository
+                int pageItems = 4;
+                int page = id ?? 0;
+                int userId = _repository.GetCurrentUserId();
+                var model = _repository
                     .GetPagePictures(page, pageItems)
-                    .Select(u => u.ToMvcPicture(userId))
-                    );
+                    .Select(u => u.ToMvcPicture(userId));
+                if (Request.IsAjaxRequest())
+                {
+                    return PartialView("_Pictures", _repository
+                        .GetPagePictures(page, pageItems)
+                        .Select(u => u.ToMvcPicture(userId))
+                        );
+                }
+                return View(model);
             }
-            return View(model);
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
         }
 
         //
@@ -63,17 +71,24 @@ namespace test.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(HttpPostedFileBase fileUpload)
         {
-            if (ModelState.IsValid)
+            try
             {
-                String name = Request.Form["PictureName"];
-                String description = Request.Form["PictureDescription"];
+                if (ModelState.IsValid)
+                {
+                    String name = Request.Form["PictureName"];
+                    String description = Request.Form["PictureDescription"];
                 
-                _repository.CreatePicture(fileUpload, name, description, User.Identity.Name);
+                    _repository.CreatePicture(fileUpload, name, description, User.Identity.Name);
 
-                return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
+                }
+
+                return RedirectToAction("Index");
             }
-
-            return RedirectToAction("Index");
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
         }
 
         //
@@ -96,13 +111,20 @@ namespace test.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ORM.Pictures pictures)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _repository.UpdatePicture(pictures.ToBllPicture());
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    _repository.UpdatePicture(pictures.ToBllPicture());
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("", "Произошла ошибка!");
+                return View(pictures);
             }
-            ModelState.AddModelError("", "Произошла ошибка!");
-            return View(pictures);
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
         }
 
         //
@@ -120,25 +142,39 @@ namespace test.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            _repository.RemovePicture(id);
+            try
+            {
+                _repository.RemovePicture(id);
                 return RedirectToAction("Index","Home");
+            }
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
         }
 
 
         public PartialViewResult Like(int id)
         {
-            int currentUserId = _repository.GetCurrentUserId();
-            _repository.CreateLike(id, currentUserId);
-            var temp = _repository.FindPicture(id);
-            var model = new PictureViewModel()
+            try
             {
-                Id = temp.Id,
-                Name = temp.Name,
-                Like = temp.Likes.SingleOrDefault(j => j.UserId == currentUserId && j.PictureId == temp.Id),
-                Url = ""
-            };
+                int currentUserId = _repository.GetCurrentUserId();
+                _repository.CreateLike(id, currentUserId);
+                var temp = _repository.FindPicture(id);
+                var model = new PictureViewModel()
+                {
+                    Id = temp.Id,
+                    Name = temp.Name,
+                    Like = temp.Likes.SingleOrDefault(j => j.UserId == currentUserId && j.PictureId == temp.Id),
+                    Url = ""
+                };
 
-            return PartialView("_Buttons", model);
+                return PartialView("_Buttons", model);
+            }
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
         }
 
         public PartialViewResult Dislike(int id)
@@ -161,7 +197,15 @@ namespace test.Controllers
         [AllowAnonymous]
         public ActionResult Image(int id)
         {
-            var picture = _repository.FindPicture(id).ToPicture();
+            Pictures picture;
+            try
+            {
+                picture = _repository.FindPicture(id).ToPicture();
+            }
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
             MemoryStream ms = new MemoryStream(picture.BinaryData);
   
             var ci = new Bitmap(System.Drawing.Image.FromStream(ms));
@@ -188,38 +232,59 @@ namespace test.Controllers
         [AllowAnonymous]
         public ActionResult ShowPhoto(int id)
         {
-            int currentUserId = _repository.GetCurrentUserId();
-            var temp = _repository.FindPicture(id);
-            var model = new PictureViewModel()
+            try
             {
-                Id = temp.Id,
-                Name = temp.Name,
-                Like = temp.Likes.SingleOrDefault(j => j.UserId == currentUserId && j.PictureId == temp.Id),
-                Url = "",
-                UserEmail = temp.User.Email
-            };
+                int currentUserId = _repository.GetCurrentUserId();
+                var temp = _repository.FindPicture(id);
+                var model = new PictureViewModel()
+                {
+                    Id = temp.Id,
+                    Name = temp.Name,
+                    Like = temp.Likes.SingleOrDefault(j => j.UserId == currentUserId && j.PictureId == temp.Id),
+                    Url = "",
+                    UserEmail = temp.User.Email
+                };
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
         }
 
         [AllowAnonymous]
         public ActionResult UserPictures(int userId)
         {
-            ViewBag.userId = userId;
-            int currentUserId = _repository.GetCurrentUserId();
-            var model = _repository.GetUserPagePictures(0, pageItems, userId).Select(u => u.ToMvcPicture(currentUserId)) ;
-            return View(model);
+            try
+            {
+                ViewBag.userId = userId;
+                int currentUserId = _repository.GetCurrentUserId();
+                var model = _repository.GetUserPagePictures(0, pageItems, userId).Select(u => u.ToMvcPicture(currentUserId)) ;
+                return View(model);
+            }
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
         }
 
         [AllowAnonymous]
         public PartialViewResult GetPagePictures(int? page, int userId)
         {
-            int temp = page ?? 1;
-            int currentUserId = _repository.GetCurrentUserId();
-            var model = _repository
-                .GetUserPagePictures(temp, pageItems, userId)
-                .Select(u => u.ToMvcPicture(currentUserId));
-            return PartialView("_Pictures", model);
+            try
+            {
+                int temp = page ?? 1;
+                int currentUserId = _repository.GetCurrentUserId();
+                var model = _repository
+                    .GetUserPagePictures(temp, pageItems, userId)
+                    .Select(u => u.ToMvcPicture(currentUserId));
+                return PartialView("_Pictures", model);
+            }
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
         }
 
         //protected override void Dispose(bool disposing)

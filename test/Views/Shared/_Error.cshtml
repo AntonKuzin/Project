@@ -1,0 +1,27 @@
+﻿@model System.Exception
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="error_mesage">
+    <span>Error.</span><br /><br />
+    @if (Model.Message == "service")
+    {
+        <span>Server maintenance.</span>
+    }
+    else if (Model.Message == "repository")
+    {
+        <span>Server maintenance.</span>
+    }
+    else if (Model.Message == "picture_service")
+    {
+        <span>No such picture found.</span>
+    }
+    else
+    {
+        <span>Unknown error.</span>
+    }
+    <br /><br />
+    <a href="/" class="button18">Index</a>
+</div>

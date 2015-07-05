@@ -18,6 +18,10 @@ namespace test.ViewModels
         [Display(Name = "Путь к файлу")]
         public string Url { get; set; }
 
+        public byte[] BinaryData { get; set; }
+
+        public string Extensiont { get; set; }
+
         public int Id { get; set; }
 
         public ORM.Likes Like { get; set; }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PresentationLauer", "test\PresentationLauer.csproj", "{82C7E4F5-091A-44D1-9C8F-42A18B5D20C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PresentationLayer", "test\PresentationLayer.csproj", "{82C7E4F5-091A-44D1-9C8F-42A18B5D20C9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{408A5107-EF2B-499B-8B62-D857037ED85F} = {408A5107-EF2B-499B-8B62-D857037ED85F}
 		{1F819E94-3E1E-4757-AAE6-9BF6BC82926C} = {1F819E94-3E1E-4757-AAE6-9BF6BC82926C}

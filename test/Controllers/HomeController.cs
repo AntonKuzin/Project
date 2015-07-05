@@ -24,23 +24,31 @@ namespace test.Controllers
 
         public ActionResult Index()
         {
-            int id = _service.GetCurrentUserId();
-            var model = (from u in _service.GetAllPictures()
-                select new PictureViewModel
-                {
-                    Description = u.Description,
-                    Name = u.Name,
-                    Url = "",
-                    Id = u.Id,
-                    Like = u.Likes.SingleOrDefault(j => j.UserId == id && j.PictureId == u.Id),
-                    UserEmail = u.User.Email,
-                    UserId = u.UserId,
-                    Rating =
-                        u.Likes.Count(j => j.Like == true) - u.Likes.Count(j => j.Like == false)
-                })
-                .OrderByDescending(u => u.Rating)
-                .Take(12);
-            return View(model);
+            try
+            {
+                int id = _service.GetCurrentUserId();
+                var model = (from u in _service.GetAllPictures()
+                    select new PictureViewModel
+                    {
+                        Description = u.Description,
+                        Name = u.Name,
+                        Url = "",
+                        Id = u.Id,
+                        Like = u.Likes.SingleOrDefault(j => j.UserId == id && j.PictureId == u.Id),
+                        UserEmail = u.User.Email,
+                        UserId = u.UserId,
+                        Rating =
+                            u.Likes.Count(j => j.Like == true) - u.Likes.Count(j => j.Like == false)
+                    })
+                    .OrderByDescending(u => u.Rating)
+                    .Take(12);
+                return View(model);
+            }
+            catch (Exception exception)
+            {
+                return PartialView("_Error", exception);
+            }
+            
  
         }
 

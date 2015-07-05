@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Data;
@@ -25,6 +26,8 @@ namespace DAL.Repositories
 
         public IEnumerable<DalPicture> GetAllPictures()
         {
+            if(_context == null)
+                throw new NullReferenceException("repository");
             return _context.Set<Pictures>().Select(u => new DalPicture()
             {
                 Id = u.Id,
@@ -41,11 +44,15 @@ namespace DAL.Repositories
 
         public IEnumerable<DalPicture> GetUserPictures(int id)
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             return _context.Set<Users>().Single(j => j.Id == id).Pictures.Select(u => u.ToDalPicture());
         }
 
         public void CreatePicture(DalPicture picture, string email)
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             picture.UserId = _context.Set<Users>().Single(u => u.Email == email).Id;
             _context.Set<Pictures>().Add(picture.ToPictures());
             _context.SaveChanges();
@@ -54,6 +61,8 @@ namespace DAL.Repositories
 
         public void UpdatePicture(DalPicture picture)
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             if (picture == null)
                 return ;
             if (GetCurrentUserId() == picture.UserId)
@@ -65,6 +74,8 @@ namespace DAL.Repositories
 
         public void RemovePicture(int id)
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             var picture = _context.Set<Pictures>().FirstOrDefault(u => u.Id == id);
             if (picture != null)
                 if (GetCurrentUserId() == picture.UserId)
@@ -76,6 +87,8 @@ namespace DAL.Repositories
 
         public void CreateLike(int id, int currentUserId)
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             if (id == 0)
                 return;
             var temp =
@@ -105,6 +118,8 @@ namespace DAL.Repositories
 
         public void CreateDislike(int id, int currentUserId)
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             if (id == 0)
                 return;
             var temp =
@@ -135,6 +150,8 @@ namespace DAL.Repositories
 
         public DalPicture FindPicture(int id)
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             if (id != 0)
                 return _context.Set<Pictures>().Find(id).ToDalPicture();
             return null;
@@ -143,6 +160,8 @@ namespace DAL.Repositories
 
         public int GetCurrentUserId()
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
                 var temp = _context.Set<Users>().FirstOrDefault(u => u.Email == HttpContext.Current.User.Identity.Name);
@@ -155,6 +174,8 @@ namespace DAL.Repositories
 
         public IEnumerable<DalPicture> GetPagePictures(int page, int pageItems)
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             return _context.Set<Pictures>()
                 .OrderBy(u => u.Id)
                 .Skip(page * pageItems)
@@ -176,6 +197,8 @@ namespace DAL.Repositories
 
         public IEnumerable<DalPicture> GetUserPagePictures(int page, int pageItems, int userId)
         {
+            if (_context == null)
+                throw new NullReferenceException("repository");
             return _context.Set<Pictures>()
                 .Where(u => u.UserId == userId)
                 .OrderBy(u => u.Id)

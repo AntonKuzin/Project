@@ -249,3 +249,7 @@ a.disliked {
     padding: 15px 5px;
     margin-top: 3.17em;
 }
+
+.error_mesage {
+    display: inline-block;
+}
